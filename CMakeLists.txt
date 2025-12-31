@@ -22,8 +22,7 @@ endif()
 if(ENABLE_CUBRIDGE)
     # cu-bridge doc’s “CMake build” path uses cmake_maca/make_maca and CUDA_PATH redirection.
     # Keep this project in C/CXX mode and compile CUDA sources via nvcc wrapper if needed.
-    project(${PROJECT_NAME} LANGUAGES C CXX)
-    list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS cu)
+    project(${PROJECT_NAME} LANGUAGES CUDA C CXX)
 
     include_directories(
       ${CMAKE_CURRENT_SOURCE_DIR}/common/include
