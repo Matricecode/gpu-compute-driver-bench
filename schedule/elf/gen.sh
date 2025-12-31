@@ -5,6 +5,7 @@ workdir="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P)"
 filenames="$(ls ${workdir}/*.cu)"
 elf=".elf"
 ptx=".ptx"
+mcfb=".mcfb"
 
 default_all_archs="--offload-arch=mp_21 --offload-arch=mp_22 --offload-arch=mp_31"
 if [ $# -ge 1 ]; then
@@ -13,16 +14,28 @@ else
     arch_option=$default_all_archs
 fi
 
-if [ -z "${TEST_ON_NVIDIA:-}" ]; then
-  for eachfile in $filenames
-   do
-      echo ${eachfile%.*}$elf
-      mcc $eachfile -o ${eachfile%.*}$elf --cuda-device-only -mtgpu $arch_option
-   done
-else
+# MetaX (MXMACA) settings
+maca_path="${MACA_PATH:-/opt/maca}"
+
+if [ -n "${TEST_ON_NVIDIA:-}" ]; then
   for eachfile in $filenames
    do
       echo ${eachfile%.*}$ptx
       nvcc -ptx $eachfile -o ${eachfile%.*}$ptx
+   done
+   
+elif [ -n "${TEST_ON_METAX:-}" ]; then
+  for eachfile in $filenames
+   do
+      echo ${eachfile%.*}$mcfb
+      mxcc -x maca -fatbin --offload-arch=xcore1000 --maca-path "$maca_path" \
+           $eachfile -o ${eachfile%.*}$mcfb
+   done
+   
+else
+  for eachfile in $filenames
+   do
+      echo ${eachfile%.*}$elf
+      mcc $eachfile -o ${eachfile%.*}$elf --cuda-device-only -mtgpu $arch_option
    done
 fi
