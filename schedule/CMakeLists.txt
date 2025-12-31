@@ -26,7 +26,7 @@ if(ENABLE_MCC OR ENABLE_NVCC OR ENABLE_CUBRIDGE)
     list (APPEND KERNEL_TEST_SOURCES ${KERNEL_TEST_SOURCES_CU})
 endif()
 
-include_directories(/usr/local/include/eigen3/Eigen)
+# include_directories(/usr/local/include/eigen3/Eigen)
 
 foreach(case_path ${KERNEL_TEST_SOURCES})
     if (NOT ${case_path} MATCHES "elf/")
