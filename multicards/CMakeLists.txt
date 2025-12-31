@@ -1,5 +1,7 @@
 if(ENABLE_NVCC)
     configure_file(../schedule/elf/EmptyKernel.ptx ./EmptyKernel.ptx COPYONLY)
+elseif(ENABLE_CUBRIDGE)
+    configure_file(../schedule/elf/EmptyKernel.mcfb ./EmptyKernel.mcfb COPYONLY)
 else()
     configure_file(../schedule/elf/EmptyKernel.elf ./EmptyKernel.elf COPYONLY)
 endif()
@@ -8,7 +10,7 @@ set(COMMON_LIB_NAME benchmark_common)
 file(GLOB_RECURSE MEMORY_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE MEMORY_TEST_SOURCES_CU ${CMAKE_CURRENT_SOURCE_DIR}/*.cu)
 
-if(ENABLE_MCC OR ENABLE_NVCC)
+if(ENABLE_MCC OR ENABLE_NVCC OR ENABLE_CUBRIDGE)
     list (APPEND MEMORY_TEST_SOURCES ${MEMORY_TEST_SOURCES_CU})
 endif()
 
